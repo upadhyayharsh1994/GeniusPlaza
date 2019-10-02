@@ -21,8 +21,7 @@ import retrofit2.Response;
 public class AddUser extends AppCompatActivity {
     PostDetails post;
     private final String TAG = "RESPONSE";
-    EditText nameInput;
-    EditText jobInput;
+    EditText name, job;
     Button createButton;
     ImageView closeButton;
 
@@ -31,18 +30,18 @@ public class AddUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        nameInput = findViewById(R.id.name_input);
-        jobInput = findViewById(R.id.job_input);
-        createButton = findViewById(R.id.button);
+        name = findViewById(R.id.tv_name);
+        job = findViewById(R.id.tv_job);
+
+        createButton = findViewById(R.id.btn_create);
         closeButton = findViewById(R.id.iv_close);
 
-        String name = nameInput.getText().toString();
-        String job = jobInput.getText().toString();
+        String name = this.name.getText().toString();
+        String job = this.job.getText().toString();
 
         post = new PostDetails(name, job);
 
         setCreateButton();
-
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,20 +57,14 @@ public class AddUser extends AppCompatActivity {
         ApiUtil.getApiService().createPost(post).enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {
-
                 int result = response.code();
-
                 if (!response.isSuccessful()) {
                     return;
                 }
 
-
                 PostDetails postDetails = response.body();
-
                 Log.e(TAG, String.valueOf(result));
-
                 String content = postDetails.getId();
-
 
                 Toast.makeText(AddUser.this, "New User ID: " + content,
                         Toast.LENGTH_LONG).show();
@@ -104,8 +97,8 @@ public class AddUser extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("name",nameInput.getText().toString());
-        outState.putString("job",jobInput.getText().toString());
+        outState.putString("name", name.getText().toString());
+        outState.putString("job", job.getText().toString());
     }
 
 }
